@@ -93,6 +93,9 @@ libgc_lb.freeVM.restype = None
 libgc_lb.pop.argtypes = [ctypes.POINTER(VM)]
 libgc_lb.pop.restype = ctypes.POINTER(Object)
 
+libgc_lb.objectPrint.argtypes = [ctypes.POINTER(Object)]
+libgc_lb.objectPrint.restype = None
+
 
 class GC_VM:
     """
@@ -143,6 +146,17 @@ class GC_VM:
             self._freed = True
         else:
             raise RuntimeError("Double free on VM")
+
+    def dump_stack(self):
+        print("Stack dump:\n")
+
+        for i in range(self._vm.contents.stackSize):
+            o_p: ctypes.POINTER(Object) = self._vm.contents.stack[i]
+
+            print(f'{i:02x}'.upper(), end='  ')
+            libgc_lb.objectPrint(o_p)
+            print(' ')
+        pass
 
 # ======================================================================================================================
 # Tests begins here
@@ -220,8 +234,25 @@ def test4():
 
     vm.free()
 
+
+def test_stack():
+    print("=== Test Stack ===")
+    vm = GC_VM()
+
+    for i in range(30):
+        vm.pushInt(i)
+        if 5 < i % 10 < 8 or (i>4 and i%3==0):
+            vm.pushPair()
+
+    vm.dump_stack()
+
+    vm.gc()
+    vm.free()
+
+
 if __name__ == '__main__':
     test1()
     test2()
     test3()
     test4()
+    test_stack()
