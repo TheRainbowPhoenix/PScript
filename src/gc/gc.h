@@ -8,6 +8,8 @@
 #define STACK_MAX 256
 #define INIT_OBJ_NUM_MAX 8
 
+#define EXPORTED __declspec(dllexport)
+
 typedef enum {
     OBJ_INT,
     OBJ_PAIR
@@ -51,19 +53,19 @@ void assert(int condition, const char* message);
 
 // Functions headers
 
-VM* newVM(void);
+EXPORTED VM* newVM(void);
 
-void push(VM* vm, Object* value);
-Object* pop(VM* vm);
-void mark(Object* object);
+EXPORTED void push(VM* vm, Object* value);
+EXPORTED Object* pop(VM* vm);
+EXPORTED void mark(Object* object);
 
-void markAll(VM* vm);
-void sweep(VM* vm);
-void gc(VM* vm);
-Object* newObject(VM* vm, ObjectType type);
-void pushInt(VM* vm, int intValue);
-Object* pushPair(VM* vm);
-void objectPrint(Object* object);
-void freeVM(VM *vm);
+EXPORTED void markAll(VM* vm);
+EXPORTED void sweep(VM* vm);
+EXPORTED void gc(VM* vm);
+EXPORTED Object* newObject(VM* vm, ObjectType type);
+EXPORTED void pushInt(VM* vm, int intValue);
+EXPORTED Object* pushPair(VM* vm);
+EXPORTED void objectPrint(Object* object);
+EXPORTED void freeVM(VM *vm);
 
 #endif //CMAKE_GC_H

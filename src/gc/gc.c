@@ -63,6 +63,8 @@ void sweep(VM* vm)
             /* This object wasn't reached, so remove it from the list and free it. */
             Object* unreached = *object;
 
+            // printf("Sweeping value \"%d\".\n", unreached->value);
+
             *object = unreached->next;
             free(unreached);
 
